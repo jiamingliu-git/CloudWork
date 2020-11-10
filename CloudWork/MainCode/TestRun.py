@@ -42,7 +42,6 @@ with open(TestReport_Path,'wb') as report:                                      
 
 
 
-
 #情况二
 #加载TestCase文件里的所有用例:                                 #没有test开头的用例不执行
 # from CloudWork_Project.MainCode import TestCase
