@@ -1,8 +1,8 @@
 import requests
 
 class Http_Request():
-    @staticmethod
-    def http_request(method,url,data,headers):
+
+    def http_request(self,method,url,data,headers):
         method=method.lower()
         if method == 'get':
             res = requests.get(url,headers=headers)

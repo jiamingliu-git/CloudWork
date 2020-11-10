@@ -8,6 +8,7 @@ from CloudWork.MainCode.TestCase_Task import TestCase_Box_Task
 from CloudWork.TestData.TestConfigData import *
 
 
+
 loader=unittest.TestLoader()                                                     #用例加载器
 casebag=unittest.TestSuite()                                                     #创建一个容器:casebag
 

@@ -1,19 +1,17 @@
-from openpyxl import *
-
 from openpyxl import load_workbook
 
 #方法一：(需要用的时候，再调用这个类拿数据),优势：占用内存小，劣势：磁盘读写压力大
 
 #拿到新建任务的数据
-class Getdata():
-    def __init__(self,fileName,sheetNum):
-        self.fileName=fileName
-        self.sheetNum=sheetNum
-
-    def cell(self,row,col):
-        wb = load_workbook(self.fileName)._sheets[self.sheetNum]
-        res=wb.cell(row,col).value
-        return res
+# class Getdata():
+#     def __init__(self,fileName,sheetNum):
+#         self.fileName=fileName
+#         self.sheetNum=sheetNum
+#
+#     def cell(self,row,col):
+#         wb = load_workbook(self.fileName)._sheets[self.sheetNum]
+#         res=wb.cell(row,col).value
+#         return res
 
 
 class LoadFile():

@@ -1,10 +1,9 @@
 import unittest
 from CloudWork.MainCode.TestMethod import TestMethod_Box_01
 import configparser
+from ddt import ddt,data
 from CloudWork.TestData.LoadFile_Method import LoadFile
 from CloudWork.TestData.TestConfigData import *
-from ddt import ddt,data
-
 
 #获取测试用例
 alldata=LoadFile(TestCase_Path, 0).get_data_auto()
