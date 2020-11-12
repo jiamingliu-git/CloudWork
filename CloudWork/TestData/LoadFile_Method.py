@@ -31,7 +31,7 @@ class LoadFile():
 #自动获取excel用例方法：
     def get_data_auto(self):
         wb = load_workbook(self.file_name)
-        sheet = wb._sheets[0]
+        sheet = wb._sheets[self.sheet_name]
         header=self.get_header()
         testcase_data = []
         for i in range(2,sheet.max_row):
@@ -45,14 +45,23 @@ class LoadFile():
 #需要手动改：
     def get_data(self):
         wb = load_workbook(self.file_name)
-        sheet=wb._sheets[0]
+        sheet=wb._sheets[self.sheet_name]
         testcase_data = []                                         # 新建一个列表，把数据全部放进列表
         for i in range(2,sheet.max_row):                            #读第2到最大行数，读出来再切
             box = {}                                                 # 新建一个空字典，把数据放进字典
-            box['Url'] = sheet.cell(i,4).value                      # 新建/定义空字典里addtest_url的值，值是我从excel里取的
-            box['Data'] = sheet.cell(i,5).value                    # 新建/定义空字典里addtest_data的值，值是我从excel里取的
-            box['Expect'] = sheet.cell(i,6).value                   # 新建/定义空字典里addtest_expect的值，值是我从excel里取的
-            testcase_data.append(box)                              # 新建一个列表，把数据全部放进列表
+            box['CaseNum'] = sheet.cell(i,1).value
+            box['Module'] = sheet.cell(i,2).value
+            box['CaseName'] = sheet.cell(i,3).value
+            box['Method'] = sheet.cell(i,4).value                    # 新建/定义空字典里addtest_url的值，值是我从excel里取的
+            box['Headers'] = sheet.cell(i,5).value                   # 新建/定义空字典里addtest_data的值，值是我从excel里取的
+            box['Url'] = sheet.cell(i,6).value                       # 新建/定义空字典里addtest_expect的值，值是我从excel里取的
+            box['Data'] = sheet.cell(i,7).value                      # 新建一个列表，把数据全部放进列表
+            box['Expect'] = sheet.cell(i,8).value
+            box['Result'] = sheet.cell(i,9).value
+            box['Form'] = sheet.cell(i,10).value
+            box['Mention'] = sheet.cell(i,11).value
+
+            testcase_data.append(box)
         return testcase_data
 
 #用例执行结果写回excel：

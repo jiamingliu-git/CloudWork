@@ -5,12 +5,12 @@ from ddt import ddt,data
 from CloudWork.TestData.LoadFile_Method import LoadFile
 from CloudWork.TestData.TestConfigData import *
 
-#获取测试用例
-alldata=LoadFile(TestCase_Path, 0).get_data_auto()
 
 #获取配置文件
 cf=configparser.ConfigParser()
-cf.read('F:\pyfile\CloudWork\TestData\\Testcase.config',encoding='UTF-8')
+cf.read('F:\pyfile\CloudWork\TestData\\TestAccount.config',encoding='UTF-8')
+# #获取测试用例
+Alldata=LoadFile(TestCase_Path,0).get_data_auto()
 
 @ddt
 class TestCase_Box_Project(unittest.TestCase):
@@ -18,7 +18,6 @@ class TestCase_Box_Project(unittest.TestCase):
 # 登录
     def setUp(self):
         global login_headers
-
         url=cf['login']['url']
         data=cf['login']['data']
         headers = getattr(LoginToken,'headers')
@@ -37,29 +36,88 @@ class TestCase_Box_Project(unittest.TestCase):
 
 
 
-#6-15用例执行
-    @data(*alldata[5:15])
-    def test_Project(self,project_data):
+# #6-15用例执行
+    @data(*Alldata[5:15])
+    def test_Project(self,alldata):
         getattr(LoginToken,'headers')['Authorization']=getattr(LoginToken,'token')     #拼接成带token的headers
         headers = getattr(LoginToken, 'headers')
 
-        # project_data['Data']['projectId']=getattr(ProjectId,'projectid')
-        # projectid=getattr(ProjectId, 'headers')
+#        for alldata in Alldata:
+        oneprodata = eval(alldata['Data'])  # 传入的数据
+        if alldata['Form']==None:                   #如果不需要拼接进此区域
+            if 'projectId' not in oneprodata:
+                project_res = TestMethod_Box_01().project(str(alldata['Method']), alldata['Url'],eval(alldata['Data']), headers=headers)
+                print('用例执行结果:', project_res.json())
+            #断言
+                try:
+                    self.assertEqual(project_res.json()['code'],str(alldata['Expect']))
+                    TestReasult = 'Pass'
+                    print('断言结果：',TestReasult)
+                except AssertionError as e:
+                    print('断言结果：'.format(e))
+                    raise e
+                finally:
+                    LoadFile(TestCase_Path, 0).write_back(alldata['CaseNum'] + 1, str(project_res.json()))
 
-        project_res = TestMethod_Box_01().project(str(project_data['Method']),project_data['Url'],eval(project_data['Data']),headers=headers)
-        print('用例执行结果:',project_res.json())
-        if project_res.json()['value']:
-            setattr(ProjectId,'projectid',project_res.json()['value'])
+                if project_res.json()['value']:                                                 #如果有生成新的项目id
+                    setattr(Mirror, 'projectid', project_res.json()['value'])                          # 把项目id存起来
+                    print('新增项目结果:', project_res.json())
+                    print('新增项目projectId',project_res.json()['value'])
+                #断言
+                    try:
+                        self.assertEqual(project_res.json()['code'], str(alldata['Expect']))
+                        TestReasult = 'Pass'
+                        print('断言结果：', TestReasult)
+                    except AssertionError as e:
+                        print('断言结果：'.format(e))
+                        raise e
+                    finally:
+                        LoadFile(TestCase_Path, 0).write_back(alldata['CaseNum'] + 1, str(project_res.json()))
 
-        try:
-            self.assertEqual(project_res.json()['code'],str(project_data['Expect']))
-            TestReasult = 'Pass'
-            print('断言结果：',TestReasult)
-        except AssertionError as e:
-            print('断言结果：'.format(e))
-            raise e
+            elif 'projectId' in oneprodata:                                            #如果参数需要用到projectId
+                setattr(Mirror, 'data', oneprodata)                                       #把数据存在mirror
+                prodata = getattr(Mirror, 'data')                                             #把数据从mirror拿到给prodata
+                prodata['projectId'] = getattr(Mirror, 'projectid')                             #把prodata中的projectid做替换
+                project_res = TestMethod_Box_01().project(str(alldata['Method']), alldata['Url'],prodata, headers=headers)
+                print('用例执行结果:', project_res.json())
+            #断言
+                try:
+                    self.assertEqual(project_res.json()['code'],str(alldata['Expect']))
+                    TestReasult = 'Pass'
+                    print('断言结果：',TestReasult)
+                except AssertionError as e:
+                    print('断言结果：'.format(e))
+                    raise e
+                finally:
+                    LoadFile(TestCase_Path, 0).write_back(alldata['CaseNum'] + 1, str(project_res.json()))
 
-        LoadFile(TestCase_Path, 0).write_back(project_data['CaseNum'] + 1, str(project_res.json()))
+        elif alldata['Form'] == 'join':                 #需要拼接进此区域
+                setattr(Mirror, 'data', oneprodata)
+                prodata = getattr(Mirror, 'data')
+                prodata['projectId'] = getattr(Mirror, 'projectid')
+#-------------------------------------------------------参数与url拼接方法-------------------------------------------------------------
+                row_url = alldata['Url']
+                row_data = prodata
+
+                list = []
+                for key, values in row_data.items():
+                    list.append(key + '=' + str(values))
+                query_string = '&'.join(list)
+                url = row_url + '?' + query_string
+# ------------------------------------------------------参数与url拼接方法-------------------------------------------------------------------
+                project_res = TestMethod_Box_01().project(str(alldata['Method']), url, prodata, headers=headers)
+                print('用例执行结果:', project_res.json())
+            #断言
+                try:
+                    self.assertEqual(project_res.json()['code'],str(alldata['Expect']))
+                    TestReasult = 'Pass'
+                    print('断言结果：',TestReasult)
+                except AssertionError as e:
+                    print('断言结果：'.format(e))
+                    raise e
+                finally:
+                    LoadFile(TestCase_Path, 0).write_back(alldata['CaseNum'] + 1, str(project_res.json()))
+
 
 
 # 退出登录
@@ -94,7 +152,7 @@ class TestCase_Box_Project(unittest.TestCase):
                                 "stopCreateTime": "",
                                 "stopStartTime": ""
                               }
-        get_projectlist_headers = {'Content-Type':'application/json;charset=UTF-8','User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)','Authorization':login_token}
+        get_projectlist_headers = {'Content-Type':'application/json;charset=UTF-8','User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)','Authorization':getattr(LoginToken,'token')}
         get_projectlist_res=TestMethod_Box_01().get_projectlist('get',get_projectlist_url,get_projectlist_data,get_projectlist_headers)
         values=get_projectlist_res.json()["result"]
         projectid_list=[]
