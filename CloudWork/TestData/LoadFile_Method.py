@@ -58,17 +58,19 @@ class LoadFile():
             box['Data'] = sheet.cell(i,7).value                      # 新建一个列表，把数据全部放进列表
             box['Expect'] = sheet.cell(i,8).value
             box['Result'] = sheet.cell(i,9).value
-            box['Form'] = sheet.cell(i,10).value
-            box['Mention'] = sheet.cell(i,11).value
+            box['TestResult'] = sheet.cell(i,10).value
+            box['Form'] = sheet.cell(i,11).value
+            box['Mention'] = sheet.cell(i,12).value
 
             testcase_data.append(box)
         return testcase_data
 
 #用例执行结果写回excel：
-    def write_back(self,i,value):
+    def write_back(self,i,result,testresult):
         wb=load_workbook(self.file_name)
         sheet=wb._sheets[self.sheet_name]
-        sheet.cell(i,9).value=value                 #结果写在第九列的result里
+        sheet.cell(i,9).value = result                 #结果写在第九列的result里
+        sheet.cell(i,10).value = testresult
         wb.save(self.file_name)
 
 if __name__ == '__main__':

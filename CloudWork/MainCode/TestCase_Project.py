@@ -8,7 +8,7 @@ from CloudWork.TestData.TestConfigData import *
 
 #获取配置文件
 cf=configparser.ConfigParser()
-cf.read('F:\pyfile\CloudWork\TestData\\TestAccount.config',encoding='UTF-8')
+cf.read(TestConfig_Path,encoding='UTF-8')
 # #获取测试用例
 Alldata=LoadFile(TestCase_Path,0).get_data_auto()
 
@@ -26,10 +26,8 @@ class TestCase_Box_Project(unittest.TestCase):
 
         try:
             self.assertEqual(login_res.json()['code'],'0000')
-            TestReasult = 'Pass'
-            print('断言结果：', TestReasult)
         except AssertionError as e:
-            print('用例执行出错：{0}'.format(e))
+            print('登录断言报错：{0}'.format(e))
             raise e
 #保存登录后token
         setattr(LoginToken,'token',login_res.json()['value'])
@@ -37,12 +35,11 @@ class TestCase_Box_Project(unittest.TestCase):
 
 
 # #6-15用例执行
-    @data(*Alldata[5:15])
+    @data(*Alldata[9:20])
     def test_Project(self,alldata):
         getattr(LoginToken,'headers')['Authorization']=getattr(LoginToken,'token')     #拼接成带token的headers
         headers = getattr(LoginToken, 'headers')
 
-#        for alldata in Alldata:
         oneprodata = eval(alldata['Data'])  # 传入的数据
         if alldata['Form']==None:                   #如果不需要拼接进此区域
             if 'projectId' not in oneprodata:
@@ -54,10 +51,11 @@ class TestCase_Box_Project(unittest.TestCase):
                     TestReasult = 'Pass'
                     print('断言结果：',TestReasult)
                 except AssertionError as e:
+                    TestReasult = 'Failed'
                     print('断言结果：'.format(e))
                     raise e
                 finally:
-                    LoadFile(TestCase_Path, 0).write_back(alldata['CaseNum'] + 1, str(project_res.json()))
+                    LoadFile(TestCase_Path, 0).write_back(alldata['CaseNum'] + 1, str(project_res.json()),TestReasult)
 
                 if project_res.json()['value']:                                                 #如果有生成新的项目id
                     setattr(Mirror, 'projectid', project_res.json()['value'])                          # 把项目id存起来
@@ -69,10 +67,11 @@ class TestCase_Box_Project(unittest.TestCase):
                         TestReasult = 'Pass'
                         print('断言结果：', TestReasult)
                     except AssertionError as e:
+                        TestReasult = 'Failed'
                         print('断言结果：'.format(e))
                         raise e
                     finally:
-                        LoadFile(TestCase_Path, 0).write_back(alldata['CaseNum'] + 1, str(project_res.json()))
+                        LoadFile(TestCase_Path, 0).write_back(alldata['CaseNum'] + 1, str(project_res.json()),TestReasult)
 
             elif 'projectId' in oneprodata:                                            #如果参数需要用到projectId
                 setattr(Mirror, 'data', oneprodata)                                       #把数据存在mirror
@@ -86,10 +85,11 @@ class TestCase_Box_Project(unittest.TestCase):
                     TestReasult = 'Pass'
                     print('断言结果：',TestReasult)
                 except AssertionError as e:
+                    TestReasult = 'Failed'
                     print('断言结果：'.format(e))
                     raise e
                 finally:
-                    LoadFile(TestCase_Path, 0).write_back(alldata['CaseNum'] + 1, str(project_res.json()))
+                    LoadFile(TestCase_Path, 0).write_back(alldata['CaseNum'] + 1, str(project_res.json()),TestReasult)
 
         elif alldata['Form'] == 'join':                 #需要拼接进此区域
                 setattr(Mirror, 'data', oneprodata)
@@ -113,10 +113,11 @@ class TestCase_Box_Project(unittest.TestCase):
                     TestReasult = 'Pass'
                     print('断言结果：',TestReasult)
                 except AssertionError as e:
+                    TestReasult = 'Failed'
                     print('断言结果：'.format(e))
                     raise e
                 finally:
-                    LoadFile(TestCase_Path, 0).write_back(alldata['CaseNum'] + 1, str(project_res.json()))
+                    LoadFile(TestCase_Path, 0).write_back(alldata['CaseNum'] + 1, str(project_res.json()),TestReasult)
 
 
 

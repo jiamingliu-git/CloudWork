@@ -1,10 +1,8 @@
 import unittest
 import HTMLTestRunner
 from CloudWork.MainCode.TestCase_Task import *
-# from CloudWork.MainCode.TestCase_Project import *
 from CloudWork.MainCode import TestCase_Task
 from CloudWork.MainCode import TestCase_Project
-
 from CloudWork.TestData.TestConfigData import *
 from CloudWork.MainCode.TestCase_Project import *
 
@@ -13,7 +11,7 @@ loader=unittest.TestLoader()                                                    
 casebag=unittest.TestSuite()                                                     #创建一个容器:casebag
 
 # #多条加用例(精确至：类名)
-# casebag.addTest(loader.loadTestsFromTestCase(TestCase_Box_Task))
+casebag.addTest(loader.loadTestsFromTestCase(TestCase_Box_Task))
 casebag.addTest(loader.loadTestsFromTestCase(TestCase_Box_Project))
 
 # #多条加用例(精确至：文件名)

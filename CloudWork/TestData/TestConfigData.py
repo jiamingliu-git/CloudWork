@@ -12,6 +12,10 @@ TestCase_Path=os.path.join(project_path,'TestData','CloudWork_TestCase.xlsx')
 TestReport_Path=os.path.join(project_path,'TestReport','report11.html')
 # print(TestReport_Path)
 
+#测试配置文件路径
+TestConfig_Path=os.path.join(project_path,'TestData','TestAccount.config')
+print(TestConfig_Path)
+
 
 
 class LoginToken():
@@ -29,4 +33,5 @@ class Mirror():
     data = None
     projectid = None
     Url = None
-    userId=None
+    userId = None
+    taskid = None
