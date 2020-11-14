@@ -41,10 +41,15 @@ class TestCase_Box_Project(unittest.TestCase):
         headers = getattr(LoginToken, 'headers')
 
         oneprodata = eval(alldata['Data'])  # 传入的数据
+
         if alldata['Form']==None:                   #如果不需要拼接进此区域
             if 'projectId' not in oneprodata:
                 project_res = TestMethod_Box_01().project(str(alldata['Method']), alldata['Url'],eval(alldata['Data']), headers=headers)
                 print('用例执行结果:', project_res.json())
+                if project_res.json()['value']:                                                 #如果有生成新的项目id
+                    setattr(Mirror, 'projectid', project_res.json()['value'])                          # 把项目id存起来
+                    print('新增项目结果:', project_res.json())
+                    print('新增项目projectId',project_res.json()['value'])
             #断言
                 try:
                     self.assertEqual(project_res.json()['code'],str(alldata['Expect']))
@@ -57,21 +62,6 @@ class TestCase_Box_Project(unittest.TestCase):
                 finally:
                     LoadFile(TestCase_Path, 0).write_back(alldata['CaseNum'] + 1, str(project_res.json()),TestReasult)
 
-                if project_res.json()['value']:                                                 #如果有生成新的项目id
-                    setattr(Mirror, 'projectid', project_res.json()['value'])                          # 把项目id存起来
-                    print('新增项目结果:', project_res.json())
-                    print('新增项目projectId',project_res.json()['value'])
-                #断言
-                    try:
-                        self.assertEqual(project_res.json()['code'], str(alldata['Expect']))
-                        TestReasult = 'Pass'
-                        print('断言结果：', TestReasult)
-                    except AssertionError as e:
-                        TestReasult = 'Failed'
-                        print('断言结果：'.format(e))
-                        raise e
-                    finally:
-                        LoadFile(TestCase_Path, 0).write_back(alldata['CaseNum'] + 1, str(project_res.json()),TestReasult)
 
             elif 'projectId' in oneprodata:                                            #如果参数需要用到projectId
                 setattr(Mirror, 'data', oneprodata)                                       #把数据存在mirror
@@ -92,32 +82,32 @@ class TestCase_Box_Project(unittest.TestCase):
                     LoadFile(TestCase_Path, 0).write_back(alldata['CaseNum'] + 1, str(project_res.json()),TestReasult)
 
         elif alldata['Form'] == 'join':                 #需要拼接进此区域
-                setattr(Mirror, 'data', oneprodata)
-                prodata = getattr(Mirror, 'data')
-                prodata['projectId'] = getattr(Mirror, 'projectid')
+            setattr(Mirror, 'data', oneprodata)
+            prodata = getattr(Mirror, 'data')
+            prodata['projectId'] = getattr(Mirror, 'projectid')
 #-------------------------------------------------------参数与url拼接方法-------------------------------------------------------------
-                row_url = alldata['Url']
-                row_data = prodata
+            row_url = alldata['Url']
+            row_data = prodata
 
-                list = []
-                for key, values in row_data.items():
-                    list.append(key + '=' + str(values))
-                query_string = '&'.join(list)
-                url = row_url + '?' + query_string
+            list = []
+            for key, values in row_data.items():
+                list.append(key + '=' + str(values))
+            query_string = '&'.join(list)
+            url = row_url + '?' + query_string
 # ------------------------------------------------------参数与url拼接方法-------------------------------------------------------------------
-                project_res = TestMethod_Box_01().project(str(alldata['Method']), url, prodata, headers=headers)
-                print('用例执行结果:', project_res.json())
-            #断言
-                try:
-                    self.assertEqual(project_res.json()['code'],str(alldata['Expect']))
-                    TestReasult = 'Pass'
-                    print('断言结果：',TestReasult)
-                except AssertionError as e:
-                    TestReasult = 'Failed'
-                    print('断言结果：'.format(e))
-                    raise e
-                finally:
-                    LoadFile(TestCase_Path, 0).write_back(alldata['CaseNum'] + 1, str(project_res.json()),TestReasult)
+            project_res = TestMethod_Box_01().project(str(alldata['Method']), url, prodata, headers=headers)
+            print('用例执行结果:', project_res.json())
+        #断言
+            try:
+                self.assertEqual(project_res.json()['code'],str(alldata['Expect']))
+                TestReasult = 'Pass'
+                print('断言结果：',TestReasult)
+            except AssertionError as e:
+                TestReasult = 'Failed'
+                print('断言结果：'.format(e))
+                raise e
+            finally:
+                LoadFile(TestCase_Path, 0).write_back(alldata['CaseNum'] + 1, str(project_res.json()),TestReasult)
 
 
 

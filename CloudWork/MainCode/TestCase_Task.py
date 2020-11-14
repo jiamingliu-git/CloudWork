@@ -43,6 +43,7 @@ class TestCase_Box_Task(unittest.TestCase):
         headers = getattr(LoginToken, 'headers')
 
         onetaskdata = eval(alldata['Data'])                     #传入的数据
+
         if alldata['Form']==None:                               #如果不需要拼接进此区域
             if 'taskId' not in onetaskdata:
                 task_res=TestMethod_Box_01().task(str(alldata['Method']),alldata['Url'],eval(alldata['Data']),headers=headers)
@@ -83,32 +84,32 @@ class TestCase_Box_Task(unittest.TestCase):
                     LoadFile(TestCase_Path, 0).write_back(alldata['CaseNum'] + 1, str(task_res.json()),TestReasult)
 
         elif alldata['Form'] == 'join':                 #需要拼接进此区域
-                setattr(Mirror, 'data', onetaskdata)
-                prodata = getattr(Mirror, 'data')
-                prodata['projectId'] = getattr(Mirror, 'projectid')
+            setattr(Mirror, 'data', onetaskdata)
+            prodata = getattr(Mirror, 'data')
+            prodata['projectId'] = getattr(Mirror, 'projectid')
 #-------------------------------------------------------参数与url拼接方法-------------------------------------------------------------
-                row_url = alldata['Url']
-                row_data = prodata
+            raw_url = alldata['Url']
+            raw_data = prodata
 
-                list = []
-                for key, values in row_data.items():
-                    list.append(key + '=' + str(values))
-                query_string = '&'.join(list)
-                url = row_url + '?' + query_string
+            list = []
+            for key, values in raw_data.items():
+                list.append(key + '=' + str(values))
+            query_string = '&'.join(list)
+            url = raw_url + '?' + query_string
 # ------------------------------------------------------参数与url拼接方法-------------------------------------------------------------------
-                task_res = TestMethod_Box_01().task(str(alldata['Method']), url, prodata, headers=headers)
-                print('用例执行结果:', task_res.json())
+            task_res = TestMethod_Box_01().task(str(alldata['Method']), url, prodata, headers=headers)
+            print('用例执行结果:', task_res.json())
             #断言
-                try:
-                    self.assertEqual(task_res.json()['code'],str(alldata['Expect']))
-                    TestReasult = 'Pass'
-                    print('断言结果：',TestReasult)
-                except AssertionError as e:
-                    TestReasult = 'Failed'
-                    print('断言结果：'.format(e))
-                    raise e
-                finally:
-                    LoadFile(TestCase_Path, 0).write_back(alldata['CaseNum'] + 1, str(task_res.json()),TestReasult)
+            try:
+                self.assertEqual(task_res.json()['code'],str(alldata['Expect']))
+                TestReasult = 'Pass'
+                print('断言结果：',TestReasult)
+            except AssertionError as e:
+                TestReasult = 'Failed'
+                print('断言结果：'.format(e))
+                raise e
+            finally:
+                LoadFile(TestCase_Path, 0).write_back(alldata['CaseNum'] + 1, str(task_res.json()),TestReasult)
 
 
 

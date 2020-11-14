@@ -15,65 +15,41 @@ class TestMethod_Box_01():
         logout_res=Http_Request().http_request(method,url,data=None,headers=None)
         return logout_res
 
-#获取所有任务id
-    def get_all_task_id(self,method,url,data,headers):
-        get_all_task_id_res=Http_Request().http_request(method,url,data,headers)
-        return get_all_task_id_res
-
-#新建任务(未发布)
-    def add_unpublish_task(self,method,url,data,headers):
-        add_task_res = Http_Request().http_request(method,url,data,headers)
-        return add_task_res
-
 #任务接口
     def task(self,method,url,data,headers):
         task_res=Http_Request().http_request(method,url,data,headers)
         return task_res
+
+#项目接口
+    def project(self,method,url,data,headers):
+        add_project_res=Http_Request().http_request(method,url,data,headers)
+        return add_project_res
 
 #删除任务(未发布)
     def delete_unpublish_task(self,method,url,headers):
         delete_unpublish_task_res = Http_Request().http_request(method,url,data=None,headers=headers)
         return delete_unpublish_task_res
 
-#新建项目(未发布)
-    def project(self,method,url,data,headers):
-        add_project_res=Http_Request().http_request(method,url,data,headers)
-        return add_project_res
+#删除项目(未发布)
+    def delete_unpublish_project(self,method,url,headers):
+        delete_project_res=Http_Request().http_request(method,url,data=None,headers=headers)
+        return delete_project_res
 
-#添加项目成员
-    def add_projectEmployee(self,method,url,data,headers):
-        add_projectEmployee_res=Http_Request().http_request(method,url,data,headers)
-        return add_projectEmployee_res
+#获取所有任务id
+    def get_all_task_id(self,method,url,data,headers):
+        get_all_task_id_res=Http_Request().http_request(method,url,data,headers)
+        return get_all_task_id_res
 
 #获取项目列表
     def get_projectlist(self,method,url,data,headers):
         get_projectlist_res=Http_Request().http_request(method,url,data,headers)
         return get_projectlist_res
 
-#暂存项目
-    def save_project(self,method,url,data,headers):
-        save_project_res=Http_Request().http_request(method,url,data,headers)
-        return save_project_res
 
-#添加项目状态
-    def add_projectstate(self,method,url,headers):
-        add_projectstate_res=Http_Request().http_request(method,url,data=None,headers=headers)
-        return add_projectstate_res
 
-#删除项目状态
-    def delete_projectstate(self,method,url,headers):
-        delete_projectstate_res=Http_Request().http_request(method,url,data=None,headers=headers)
-        return delete_projectstate_res
 
-#删除项目(未发布)
-    def delete_unpublish_project(self,method,url,headers):
-        delete_project_res=Http_Request().http_request(method,url,data=None,headers=headers)
-        return delete_project_res
 
-#删除项目成员
-    def delete_projectuser(self,method,url,headers):
-        delete_projectuser_res=Http_Request().http_request(method,url,data=None,headers=headers)
-        return delete_projectuser_res
+
 
 
 # class TestMethod_Box_02():
