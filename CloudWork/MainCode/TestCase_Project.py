@@ -5,7 +5,7 @@ from ddt import ddt,data
 from CloudWork.TestData.LoadFile_Method import LoadFile
 from CloudWork.TestData.TestConfigData import *
 #123
-
+#456
 #获取配置文件
 cf=configparser.ConfigParser()
 cf.read(TestConfig_Path,encoding='UTF-8')
