@@ -86,14 +86,14 @@ class TestCase_Box_Project(unittest.TestCase):
             prodata = getattr(Mirror, 'data')
             prodata['projectId'] = getattr(Mirror, 'projectid')
 #-------------------------------------------------------参数与url拼接方法-------------------------------------------------------------
-            row_url = alldata['Url']
-            row_data = prodata
+            raw_url = alldata['Url']
+            raw_data = prodata
 
             list = []
-            for key, values in row_data.items():
+            for key, values in raw_data.items():
                 list.append(key + '=' + str(values))
             query_string = '&'.join(list)
-            url = row_url + '?' + query_string
+            url = raw_url + '?' + query_string
 # ------------------------------------------------------参数与url拼接方法-------------------------------------------------------------------
             project_res = TestMethod_Box_01().project(str(alldata['Method']), url, prodata, headers=headers)
             print('用例执行结果:', project_res.json())
