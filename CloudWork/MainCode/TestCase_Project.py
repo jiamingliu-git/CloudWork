@@ -4,8 +4,8 @@ import configparser
 from ddt import ddt,data
 from CloudWork.TestData.LoadFile_Method import LoadFile
 from CloudWork.TestData.TestConfigData import *
-#123
-#456
+from CloudWork.MainCode.LogMethod import Mylogger
+
 #获取配置文件
 cf=configparser.ConfigParser()
 cf.read(TestConfig_Path,encoding='UTF-8')
@@ -13,7 +13,7 @@ cf.read(TestConfig_Path,encoding='UTF-8')
 Alldata=LoadFile(TestCase_Path,0).get_data_auto()
 
 @ddt
-class TestCase_Box_Project(unittest.TestCase):
+class TestCaseBox_Project(unittest.TestCase):
 
 # 登录
     def setUp(self):
@@ -27,7 +27,7 @@ class TestCase_Box_Project(unittest.TestCase):
         try:
             self.assertEqual(login_res.json()['code'],'0000')
         except AssertionError as e:
-            print('登录断言报错：{0}'.format(e))
+            Mylogger().error('登录断言报错：{0}'.format(e))
             raise e
 #保存登录后token
         setattr(LoginToken,'token',login_res.json()['value'])
@@ -45,22 +45,21 @@ class TestCase_Box_Project(unittest.TestCase):
         if alldata['Form']==None:                   #如果不需要拼接进此区域
             if 'projectId' not in oneprodata:
                 project_res = TestMethod_Box_01().project(str(alldata['Method']), alldata['Url'],eval(alldata['Data']), headers=headers)
-                print('用例执行结果:', project_res.json())
+                Mylogger().info('用例执行结果:{}'.format(project_res.json()))
                 if project_res.json()['value']:                                                 #如果有生成新的项目id
                     setattr(Mirror, 'projectid', project_res.json()['value'])                          # 把项目id存起来
                     print('新增项目结果:', project_res.json())
-                    print('新增项目projectId',project_res.json()['value'])
             #断言
                 try:
                     self.assertEqual(project_res.json()['code'],str(alldata['Expect']))
                     TestReasult = 'Pass'
-                    print('断言结果：',TestReasult)
+                    Mylogger().info('断言结果：{}'.format(TestReasult))
                 except AssertionError as e:
                     TestReasult = 'Failed'
-                    print('断言结果：'.format(e))
+                    Mylogger().error('断言结果：{}'.format(e))
                     raise e
                 finally:
-                    LoadFile(TestCase_Path, 0).write_back(alldata['CaseNum'] + 1, str(project_res.json()),TestReasult)
+                    LoadFile(TestCase_Path, 0).write_back(alldata['CaseNum'] + 1, str(project_res.json()), TestReasult)
 
 
             elif 'projectId' in oneprodata:                                            #如果参数需要用到projectId
@@ -68,15 +67,15 @@ class TestCase_Box_Project(unittest.TestCase):
                 prodata = getattr(Mirror, 'data')                                             #把数据从mirror拿到给prodata
                 prodata['projectId'] = getattr(Mirror, 'projectid')                             #把prodata中的projectid做替换
                 project_res = TestMethod_Box_01().project(str(alldata['Method']), alldata['Url'],prodata, headers=headers)
-                print('用例执行结果:', project_res.json())
+                Mylogger().info('用例执行结果:{}'.format(project_res.json()))
             #断言
                 try:
                     self.assertEqual(project_res.json()['code'],str(alldata['Expect']))
                     TestReasult = 'Pass'
-                    print('断言结果：',TestReasult)
+                    Mylogger().info('断言结果：{}'.format(TestReasult))
                 except AssertionError as e:
                     TestReasult = 'Failed'
-                    print('断言结果：'.format(e))
+                    Mylogger().error('断言结果：{}'.format(e))
                     raise e
                 finally:
                     LoadFile(TestCase_Path, 0).write_back(alldata['CaseNum'] + 1, str(project_res.json()),TestReasult)
@@ -96,15 +95,15 @@ class TestCase_Box_Project(unittest.TestCase):
             url = raw_url + '?' + query_string
 # ------------------------------------------------------参数与url拼接方法-------------------------------------------------------------------
             project_res = TestMethod_Box_01().project(str(alldata['Method']), url, prodata, headers=headers)
-            print('用例执行结果:', project_res.json())
+            Mylogger().info('用例执行结果:{}'.format(project_res.json()))
         #断言
             try:
                 self.assertEqual(project_res.json()['code'],str(alldata['Expect']))
                 TestReasult = 'Pass'
-                print('断言结果：',TestReasult)
+                Mylogger().info('断言结果：{}'.format(TestReasult))
             except AssertionError as e:
                 TestReasult = 'Failed'
-                print('断言结果：'.format(e))
+                Mylogger().error('断言结果：{}'.format(e))
                 raise e
             finally:
                 LoadFile(TestCase_Path, 0).write_back(alldata['CaseNum'] + 1, str(project_res.json()),TestReasult)

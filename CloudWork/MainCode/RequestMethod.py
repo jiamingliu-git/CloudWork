@@ -1,4 +1,5 @@
 import requests
+from CloudWork.MainCode.LogMethod import Mylogger
 
 class Http_Request():
 

@@ -70,7 +70,7 @@ class LoadFile():
         wb=load_workbook(self.file_name)
         sheet=wb._sheets[self.sheet_name]
         sheet.cell(i,9).value = result                 #结果写在第九列的result里
-        sheet.cell(i,10).value = testresult
+        sheet.cell(i,10).value = testresult             #结果写在第十列的testresult里
         wb.save(self.file_name)
 
 if __name__ == '__main__':

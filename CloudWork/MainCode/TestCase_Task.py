@@ -15,7 +15,7 @@ cf.read(TestConfig_Path,encoding='UTF-8')
 
 
 @ddt
-class TestCase_Box_Task(unittest.TestCase):
+class TestCaseBox_Task(unittest.TestCase):
 
 # 登录
     def setUp(self):
