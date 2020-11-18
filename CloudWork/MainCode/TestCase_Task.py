@@ -5,7 +5,6 @@ from CloudWork.TestData.LoadFile_Method import LoadFile
 from CloudWork.TestData.TestConfigData import *
 import configparser
 
-
 #获取excel里所有数据（测试用例）
 Alldata = LoadFile(TestCase_Path, 0).get_data_auto()
 
