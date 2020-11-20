@@ -6,6 +6,7 @@ from CloudWork.TestData.LoadFile_Method import LoadFile
 from CloudWork.TestData.ConfigData import *
 from CloudWork.TestData.ConfigPath import *
 from CloudWork.MainCode.LogMethod import Mylogger
+from CloudWork.TestData.LoadFile_Method import Write_back
 
 #获取配置文件
 cf=configparser.ConfigParser()
@@ -50,17 +51,19 @@ class TestCaseBox_Project(unittest.TestCase):
                 if project_res.json()['value']:                                                 #如果有生成新的项目id
                     setattr(Mirror, 'projectid', project_res.json()['value'])                          # 把项目id存起来
                     print('新增项目结果:', project_res.json())
+
             #断言
+                TestResult = ''
                 try:
                     self.assertEqual(project_res.json()['code'],str(alldata['Expect']))
-                    TestReasult = 'Pass'
-                    Mylogger().info('断言结果：{}'.format(TestReasult))
+                    TestResult = 'Pass'
+                    Mylogger().info('断言结果：{}'.format(TestResult))
                 except AssertionError as e:
-                    TestReasult = 'Failed'
+                    TestResult = 'Failed'
                     Mylogger().error('断言结果：{}'.format(e))
                     raise e
                 finally:
-                    LoadFile(TestCase_Path, 0).write_back(alldata['CaseNum'] + 1, str(project_res.json()), TestReasult)
+                    Write_back().write_back(TestCase_Path, 0,alldata['CaseNum'] + 1, str(project_res.json()),TestResult)
 
 
             elif 'projectId' in oneprodata:                                            #如果参数需要用到projectId
@@ -69,17 +72,19 @@ class TestCaseBox_Project(unittest.TestCase):
                 prodata['projectId'] = getattr(Mirror, 'projectid')                             #把prodata中的projectid做替换
                 project_res = TestMethod_Box_01().project(str(alldata['Method']), alldata['Url'],prodata, headers=headers)
                 Mylogger().info('用例执行结果:{}'.format(project_res.json()))
+
             #断言
+                TestResult = ''
                 try:
                     self.assertEqual(project_res.json()['code'],str(alldata['Expect']))
-                    TestReasult = 'Pass'
-                    Mylogger().info('断言结果：{}'.format(TestReasult))
+                    TestResult = 'Pass'
+                    Mylogger().info('断言结果：{}'.format(TestResult))
                 except AssertionError as e:
-                    TestReasult = 'Failed'
+                    TestResult = 'Failed'
                     Mylogger().error('断言结果：{}'.format(e))
                     raise e
                 finally:
-                    LoadFile(TestCase_Path, 0).write_back(alldata['CaseNum'] + 1, str(project_res.json()),TestReasult)
+                    Write_back().write_back(TestCase_Path, 0,alldata['CaseNum'] + 1, str(project_res.json()),TestResult)
 
         elif alldata['Form'] == 'join':                 #需要拼接进此区域
             setattr(Mirror, 'data', oneprodata)
@@ -97,17 +102,19 @@ class TestCaseBox_Project(unittest.TestCase):
 # ------------------------------------------------------参数与url拼接方法-------------------------------------------------------------------
             project_res = TestMethod_Box_01().project(str(alldata['Method']), url, prodata, headers=headers)
             Mylogger().info('用例执行结果:{}'.format(project_res.json()))
+
         #断言
+            TestResult = ''
             try:
-                self.assertEqual(project_res.json()['code'],str(alldata['Expect']))
-                TestReasult = 'Pass'
-                Mylogger().info('断言结果：{}'.format(TestReasult))
+                self.assertEqual(project_res.json()['code'], str(alldata['Expect']))
+                TestResult = 'Pass'
+                Mylogger().info('断言结果：{}'.format(TestResult))
             except AssertionError as e:
-                TestReasult = 'Failed'
+                TestResult = 'Failed'
                 Mylogger().error('断言结果：{}'.format(e))
                 raise e
             finally:
-                LoadFile(TestCase_Path, 0).write_back(alldata['CaseNum'] + 1, str(project_res.json()),TestReasult)
+                Write_back().write_back(TestCase_Path, 0, alldata['CaseNum'] + 1, str(project_res.json()), TestResult)
 
 
 
