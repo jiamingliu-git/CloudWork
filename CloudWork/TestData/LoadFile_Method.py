@@ -65,13 +65,21 @@ class LoadFile():
             testcase_data.append(box)
         return testcase_data
 
-#用例执行结果写回excel：
-    def write_back(self,i,result,testresult):
-        wb=load_workbook(self.file_name)
-        sheet=wb._sheets[self.sheet_name]
-        sheet.cell(i,9).value = result                 #结果写在第九列的result里
-        sheet.cell(i,10).value = testresult             #结果写在第十列的testresult里
-        wb.save(self.file_name)
+# #用例执行结果写回excel：
+#     def write_back(self,i,result,testresult):
+#         wb=load_workbook(self.file_name)
+#         sheet=wb._sheets[self.sheet_name]
+#         sheet.cell(i,9).value = result                 #结果写在第九列的result里
+#         sheet.cell(i,10).value = testresult             #结果写在第十列的testresult里
+#         wb.save(self.file_name)
+
+class Write_back():
+    def write_back(self,file_name,sheet_name,row,result,testresult):
+        wb=load_workbook(file_name)
+        sheet=wb._sheets[sheet_name]
+        sheet.cell(row,9).value = result
+        sheet.cell(row,10).value = testresult
+        wb.save(file_name)
 
 if __name__ == '__main__':
     print('*********')

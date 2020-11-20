@@ -3,7 +3,8 @@ from CloudWork.MainCode.TestMethod import TestMethod_Box_01
 import configparser
 from ddt import ddt,data
 from CloudWork.TestData.LoadFile_Method import LoadFile
-from CloudWork.TestData.TestConfigData import *
+from CloudWork.TestData.ConfigData import *
+from CloudWork.TestData.ConfigPath import *
 from CloudWork.MainCode.LogMethod import Mylogger
 
 #获取配置文件
@@ -20,7 +21,7 @@ class TestCaseBox_Project(unittest.TestCase):
         global login_headers
         url=cf['login']['url']
         data=cf['login']['data']
-        headers = getattr(LoginToken,'headers')
+        headers = getattr(Mirror,'headers')
         login_res=TestMethod_Box_01().login('post',url=eval(url),data=eval(data),headers=headers)
         print('登录结果：',login_res.json())
 
@@ -30,15 +31,15 @@ class TestCaseBox_Project(unittest.TestCase):
             Mylogger().error('登录断言报错：{0}'.format(e))
             raise e
 #保存登录后token
-        setattr(LoginToken,'token',login_res.json()['value'])
+        setattr(Mirror,'token',login_res.json()['value'])
 
 
 
 # #6-15用例执行
     @data(*Alldata[9:20])
     def test_Project(self,alldata):
-        getattr(LoginToken,'headers')['Authorization']=getattr(LoginToken,'token')     #拼接成带token的headers
-        headers = getattr(LoginToken, 'headers')
+        getattr(Mirror,'headers')['Authorization']=getattr(Mirror,'token')     #拼接成带token的headers
+        headers = getattr(Mirror, 'headers')
 
         oneprodata = eval(alldata['Data'])  # 传入的数据
 
@@ -142,7 +143,7 @@ class TestCaseBox_Project(unittest.TestCase):
                                 "stopCreateTime": "",
                                 "stopStartTime": ""
                               }
-        get_projectlist_headers = {'Content-Type':'application/json;charset=UTF-8','User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)','Authorization':getattr(LoginToken,'token')}
+        get_projectlist_headers = {'Content-Type':'application/json;charset=UTF-8','User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)','Authorization':getattr(Mirror,'token')}
         get_projectlist_res=TestMethod_Box_01().get_projectlist('get',get_projectlist_url,get_projectlist_data,get_projectlist_headers)
         values=get_projectlist_res.json()["result"]
         projectid_list=[]
@@ -153,7 +154,7 @@ class TestCaseBox_Project(unittest.TestCase):
     #删除项目
         for b in projectid_list:
             delete_project_url='https://testscp-ms.xgjk.info/scp-work/project/deleteById?projectId={0}'.format(b)
-            delete_project_headers = {'Content-Type':'application/json;charset=UTF-8','Authorization':TestCase_Box_Project().setUp()}
+            delete_project_headers = {'Content-Type':'application/json;charset=UTF-8','Authorization':getattr(Mirror,'token')}
             delete_project_res=TestMethod_Box_01().delete_unpublish_project('delete',delete_project_url,delete_project_headers)
             print('删除未发布项目结果：',delete_project_res.json())
             self.assertEqual(delete_project_res.json()['code'], '0000','删除未发布项目失败')
