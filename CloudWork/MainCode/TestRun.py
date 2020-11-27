@@ -11,7 +11,7 @@ import time
 loader=unittest.TestLoader()                                                     #用例加载器
 casebag=unittest.TestSuite()                                                     #创建一个容器:casebag
 
-# #多条加用例(精确至：类名)
+'''多条加用例(精确至：类名)'''
 casebag.addTest(loader.loadTestsFromTestCase(TestCaseBox_Task))
 casebag.addTest(loader.loadTestsFromTestCase(TestCaseBox_Project))
 
@@ -21,7 +21,11 @@ casebag.addTest(loader.loadTestsFromTestCase(TestCaseBox_Project))
 # #单条加用例(精确至： 类名 -- 方法名)
 # casebag.addTest(TestCase_Box_AddTask('test_a_add_task'))                         #往casebag里加用例。。。。
 # casebag.addTest(TestCase_Box_SaveTask('test_b_savetask'))
-# casebag.addTest(TestCase_Box_Project('delete_all_unpublish_project'))
+
+# '''删除所有任务与项目（未发布）'''
+# casebag.addTest(TestCaseBox_Task('delete_all_unpublish_task'))
+# casebag.addTest(TestCaseBox_Project('delete_all_unpublish_project'))
+
 
 
 
@@ -47,19 +51,37 @@ with open(TestReport_Path,'wb') as report:                                      
 
 
 
-
-
-
-#情况二
-#加载TestCase文件里的所有用例:                                 #没有test开头的用例不执行
-# from CloudWork_Project.MainCode import TestCase
-# loader=unittest.TestLoader()
-# casebag.addTest(loader.loadTestsFromModule(TestCase))
-
-
-
-# ##
-# suite1 = unittest.TestLoader().loadTestsFromTestCase(TestCase_Box_Project().test_a_add_project())               #使用unittest中的TestLoader加载用例（类名），放入suite1
-# suite2 = unittest.TestLoader().loadTestsFromTestCase(TestCase_Box_Project().test_b_add_projectemployee())               #使用unittest中的TestLoader加载用例（类名），放入suite1
+# '''发送邮件'''
+# import smtplib
+# import time
+# from email.mime.multipart import MIMEMultipart
+# from email.mime.text import MIMEText
+# from email.mime.application import MIMEApplication
 #
-# casebag = unittest.TestSuite().addTests([suite1,suite2])
+# _user='396627130@qq.com'
+# _pwd='vmrmgpvoirpcbjjd'
+#
+# now = time.strftime("%Y-%m-%d %H_%M_%S")
+#
+#
+# class sendEmail():
+#     def send_email(self,email_to,filepath):
+#         msg=MIMEMultipart()
+#         msg['Subject']=now+'测试报告'
+#         msg['From']=_user
+#         msg['To'] = email_to
+#
+#         part = MIMEText('这是自动化测试结果，请查收！')
+#         msg.attach(part)
+#
+#         part =MIMEApplication(open(filepath,'rb').read())
+#         part.add_header('Content-Dispositon','attachment',filename=filepath)
+#         msg.attach(part)
+#         s=smtplib.SMTP_SSL('smtp.qq.com',timeout=50)
+#         s.login(_user,_pwd)
+#         s.sendmail(_user,email_to,msg.as_string())
+#         s.close()
+#
+# if __name__ == '__main__':
+#     sendEmail().send_email('396627130@qq.com',r'F:\pyfile\CloudWork20201124.rar')
+

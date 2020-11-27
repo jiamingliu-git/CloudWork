@@ -57,7 +57,7 @@ class TestCaseBox_Task(unittest.TestCase):
                 TestResult = ''
                 try:
                     self.assertEqual(str(alldata['Expect']),task_res.json()['code'])
-                    TestResult = 'PASS'
+                    TestResult = 'Pass'
                 except AssertionError as e:
                     TestResult = 'Failed'
                     print('断言结果：{0}'.format(e))
@@ -121,8 +121,6 @@ class TestCaseBox_Task(unittest.TestCase):
                 raise e
             finally:
                 Write_back().write_back(TestCase_Path, 0,alldata['CaseNum'] + 1, str(task_res.json()),TestResult)
-
-
 
 # 退出登录
     def tearDown(self):

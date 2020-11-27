@@ -135,11 +135,11 @@ class TestCaseBox_Project(unittest.TestCase):
 
     def delete_all_unpublish_project(self):
         #获取所有项目列表(未发布)
-        get_projectlist_url='https://testscp-ms.xgjk.info/scp-work/project/findByCondition'
-        get_projectlist_data={"currentPage": 1,
+        get_projectlist_url = 'https://testscp-ms.xgjk.info/scp-work/project/findByCondition'
+        get_projectlist_data = {"currentPage": 1,
                                 "headEmployeeIds": [],
                                 "introduce": "",
-                                "pageSize":50,
+                                "pageSize": 50,
                                 "projectClassIds": [],
                                 "projectCreatorIds": [],
                                 "projectEmployeeIds": [],
@@ -149,9 +149,12 @@ class TestCaseBox_Project(unittest.TestCase):
                                 "startStartTime": "",
                                 "stopCreateTime": "",
                                 "stopStartTime": ""
-                              }
-        get_projectlist_headers = {'Content-Type':'application/json;charset=UTF-8','User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)','Authorization':getattr(Mirror,'token')}
-        get_projectlist_res=TestMethod_Box_01().get_projectlist('get',get_projectlist_url,get_projectlist_data,get_projectlist_headers)
+                                }
+        get_projectlist_headers = {'Content-Type': 'application/json;charset=UTF-8',
+                                   'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
+                                   'Authorization': 'eyJhbGciOiJIUzUxMiJ9.eyJsb2dpblR5cGUiOiJQQyIsIm1vYmlsZSI6IjEzNjQwOTgxMjE5IiwidXNlck5hbWUiOiLliJhMQVUiLCJleHAiOjE2MDY0NjE3MjksInVzZXJJZCI6MTI2MDM4NDc5NzMyNzM2fQ.VfdQ2YyPCC7EqDohAyi8F0hZ_dExQpFgx7vsv1oyk5At9ZkSK1dUnMr4AFp-Bghi4ZRZ9HVKIloPwODKJ1BUbg'}
+        get_projectlist_res = TestMethod_Box_01().get_projectlist('post', get_projectlist_url, get_projectlist_data,
+                                                                  get_projectlist_headers)
         values=get_projectlist_res.json()["result"]
         projectid_list=[]
     #取到所有项目id(未发布)
